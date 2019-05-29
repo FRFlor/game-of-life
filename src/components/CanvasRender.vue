@@ -1,6 +1,6 @@
 <template>
     <div class="canvas-render">
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas" height="500" width="500"></canvas>
     </div>
 </template>
 
@@ -10,12 +10,13 @@
 
     @Component
     export default class CanvasRender extends Vue {
+        protected canvas?: HTMLCanvasElement;
         protected gameOfLife?: GameOfLife;
 
         protected mounted(): void {
-            const target: HTMLCanvasElement = document.getElementById('canvas') as HTMLCanvasElement;
+            this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
-            const context: CanvasRenderingContext2D | null = target.getContext('2d');
+            const context: CanvasRenderingContext2D | null = this.canvas.getContext('2d');
             if (context === null) {
                 return;
             }

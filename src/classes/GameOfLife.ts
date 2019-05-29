@@ -1,12 +1,17 @@
-export default class GameOfLife {
-    protected canvas: CanvasRenderingContext2D;
+import Cell from '@/classes/Cell';
 
-    constructor(canvas: CanvasRenderingContext2D) {
-        this.canvas = canvas;
+export default class GameOfLife {
+    protected ctx: CanvasRenderingContext2D;
+    protected cells: Cell[] = [];
+
+    constructor(ctx: CanvasRenderingContext2D) {
+        this.ctx = ctx;
+        this.cells[0] = new Cell(ctx, {row: 0, column: 0});
     }
 
     public render(): void {
-        this.canvas.fillStyle = 'green';
-        this.canvas.fillRect(10, 10, 150, 100);
+        this.ctx.fillStyle = 'blue';
+        this.ctx.fillRect(0, 0, 250, 250);
+        this.cells[0].render();
     }
 }
