@@ -1,7 +1,8 @@
 import {GridCoordinates} from '@/types';
+import Configurations from '@/classes/Configurations';
 
 export default class Cell {
-    public position: GridCoordinates;
+    protected position: GridCoordinates;
     protected ctx: CanvasRenderingContext2D;
 
     constructor(ctx: CanvasRenderingContext2D, position: GridCoordinates) {
@@ -16,22 +17,23 @@ export default class Cell {
     }
 
     protected get color(): string {
-        return 'green';
+        const hue: number = 20 * (this.position.column + this.position.row * Configurations.columnCount);
+        return `hsl(${hue},75%,50%)`;
     }
 
     protected get x0(): number {
-        return 0;
+        return this.position.column * this.width;
     }
 
     protected get y0(): number {
-        return 0;
+        return this.position.row * this.height;
     }
 
     protected get width(): number {
-        return 50;
+        return Math.ceil(this.ctx.canvas.height / Configurations.rowCount);
     }
 
     protected get height(): number {
-        return 50;
+        return Math.ceil(this.ctx.canvas.width / Configurations.columnCount);
     }
 }
