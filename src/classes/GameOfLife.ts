@@ -2,8 +2,8 @@ import Cell from '@/classes/Cell';
 import Configurations from '@/classes/Configurations';
 
 export default class GameOfLife {
-    protected ctx: CanvasRenderingContext2D;
-    protected cells: Cell[] = [];
+    private ctx: CanvasRenderingContext2D;
+    private cells: Cell[] = [];
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
