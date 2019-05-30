@@ -6,12 +6,12 @@
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import GameOfLife from '@/classes/GameOfLife';
+    import Grid from '@/classes/GameOfLife';
 
     @Component
     export default class CanvasRender extends Vue {
         protected canvas?: HTMLCanvasElement;
-        protected gameOfLife?: GameOfLife;
+        protected gameOfLife?: Grid;
 
         protected mounted(): void {
             this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -21,7 +21,7 @@
                 return;
             }
 
-            this.gameOfLife = new GameOfLife(context);
+            this.gameOfLife = new Grid(context);
             this.gameOfLife.render();
         }
     }

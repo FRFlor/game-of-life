@@ -2,6 +2,7 @@ import {GridCoordinates} from '@/types';
 import Configurations from '@/classes/Configurations';
 
 export default class Cell {
+    public readonly neighbours: Cell[] = [];
     private position: GridCoordinates;
     private ctx: CanvasRenderingContext2D;
 
@@ -23,8 +24,20 @@ export default class Cell {
         return this.position.row * this.height;
     }
 
+    public get row(): number {
+        return this.position.row;
+    }
+
+    public get column(): number {
+        return this.position.column;
+    }
+
+    public get index(): number {
+        return this.position.column + this.position.row * Configurations.columnCount;
+    }
+
     private get color(): string {
-        const hue: number = 50 * (this.position.column + this.position.row * Configurations.columnCount);
+        const hue: number = 50 * this.index;
         const randomBetween = (max: number, min: number): number => Math.floor(Math.random() * (max - min + 1) + min);
 
         return `hsl(${hue},${randomBetween(50, 100)}%,${randomBetween(50, 100)}%)`;
