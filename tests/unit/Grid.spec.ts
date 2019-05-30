@@ -20,9 +20,9 @@ describe('Grid', () => {
         const grid: Grid = new Grid(ctx);
 
         const expectedNeighbours: Cell[] = [
-            grid.getCellAt(0, 1),
-            grid.getCellAt(1, 0),
-            grid.getCellAt(1, 1),
+            grid.getCellAt({row: 0, column: 1}),
+            grid.getCellAt({row: 1, column: 1}),
+            grid.getCellAt({row: 1, column: 0}),
         ];
 
         const cellSort = (left: Cell, right: Cell): number => {
@@ -37,7 +37,7 @@ describe('Grid', () => {
             return 0;
         };
 
-        expect(grid.getCellAt(0, 0).neighbours.sort(cellSort)).toEqual(expectedNeighbours.sort(cellSort));
+        expect(grid.getCellAt({row: 0, column: 0}).neighbours.sort(cellSort)).toEqual(expectedNeighbours.sort(cellSort));
     });
 
 });

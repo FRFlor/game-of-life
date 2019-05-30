@@ -1,5 +1,6 @@
 import Cell from '@/classes/Cell';
 import Configurations from '@/classes/Configurations';
+import {GridCoordinates} from '@/types';
 
 export default class Grid {
     private ctx: CanvasRenderingContext2D;
@@ -13,6 +14,20 @@ export default class Grid {
             }
         }
 
+        this.linkCellsAsNeighbours();
+    }
+
+    public render(): void {
+        this.ctx.fillStyle = 'hsl(0, 0%, 15%)';
+        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.cells.forEach((cell: Cell) => cell.render());
+    }
+
+    public getCellAt({row, column}: GridCoordinates): Cell {
+        return this.cells[column + row * Configurations.columnCount];
+    }
+
+    private linkCellsAsNeighbours(): void {
         this.cells.forEach((mainCell: Cell) => {
             const adjacentCells: Cell[] = this.cells.filter((otherCell: Cell) => {
                 if (mainCell === otherCell) {
@@ -29,15 +44,5 @@ export default class Grid {
 
             mainCell.neighbours.push(...adjacentCells);
         });
-    }
-
-    public render(): void {
-        this.ctx.fillStyle = 'hsl(0, 0%, 15%)';
-        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        this.cells.forEach((cell: Cell) => cell.render());
-    }
-
-    public getCellAt(row: number, column: number): Cell {
-        return this.cells[column + row * Configurations.columnCount];
     }
 }
