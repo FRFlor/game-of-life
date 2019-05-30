@@ -1,6 +1,7 @@
 import Grid from '@/classes/Grid';
 import Configurations from '@/classes/Configurations';
 import Cell from '@/classes/Cell';
+import {GridCoordinates} from '@/types';
 
 describe('Grid', () => {
     let canvas: HTMLCanvasElement;
@@ -16,28 +17,45 @@ describe('Grid', () => {
         ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     });
 
-    it('Determines the correct neighbours for cells', () => {
-        const grid: Grid = new Grid(ctx);
+    describe('Determines the correct neighbours for cells', () => {
 
-        const expectedNeighbours: Cell[] = [
-            grid.getCellAt({row: 0, column: 1}),
-            grid.getCellAt({row: 1, column: 1}),
-            grid.getCellAt({row: 1, column: 0}),
-        ];
+            it.each`
+        position | neighbours
+        ${{row: 0, column: 0}} | ${[
+                {row: 0, column: 1},
+                {row: 1, column: 1}, {row: 1, column: 0},
+            ]}
 
-        const cellSort = (left: Cell, right: Cell): number => {
-            if (left.index < right.index) {
-                return -1;
-            }
+        ${{row: 0, column: 1}} | ${[
+                {row: 0, column: 0}, {row: 0, column: 2},
+                {row: 1, column: 1}, {row: 1, column: 2}, {row: 1, column: 0},
+            ]}
 
-            if (left.index > right.index) {
-                return 1;
-            }
+         ${{row: 1, column: 1}} | ${[
+                {row: 0, column: 0}, {row: 0, column: 1}, {row: 0, column: 2},
+                {row: 1, column: 0}, {row: 1, column: 2},
+                {row: 2, column: 0}, {row: 2, column: 1}, {row: 2, column: 2},
+            ]}
+        `('Cell at $position', ({position, neighbours}) => {
+                const grid: Grid = new Grid(ctx);
 
-            return 0;
-        };
+                const expectedNeighbours: Cell[] = neighbours
+                    .map((neighbourPosition: GridCoordinates) => grid.getCellAt(neighbourPosition));
 
-        expect(grid.getCellAt({row: 0, column: 0}).neighbours.sort(cellSort)).toEqual(expectedNeighbours.sort(cellSort));
-    });
+                const cellSort = (left: Cell, right: Cell): number => {
+                    if (left.index < right.index) {
+                        return -1;
+                    }
 
+                    if (left.index > right.index) {
+                        return 1;
+                    }
+
+                    return 0;
+                };
+
+                expect(grid.getCellAt(position).neighbours.sort(cellSort)).toEqual(expectedNeighbours.sort(cellSort));
+            });
+        },
+    );
 });
