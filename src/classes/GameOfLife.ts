@@ -1,4 +1,5 @@
 import Cell from '@/classes/Cell';
+import Configurations from '@/classes/Configurations';
 
 export default class GameOfLife {
     protected ctx: CanvasRenderingContext2D;
@@ -6,12 +7,16 @@ export default class GameOfLife {
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
-        this.cells[0] = new Cell(ctx, {row: 2, column: 1});
+        for (let column = 0; column < Configurations.columnCount; column++) {
+            for (let row = 0; row < Configurations.rowCount; row++) {
+                this.cells.push(new Cell(ctx, {row, column}));
+            }
+        }
     }
 
     public render(): void {
         this.ctx.fillStyle = 'hsl(0, 0%, 15%)';
-        this.ctx.fillRect(0, 0, 250, 250);
-        this.cells[0].render();
+        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.cells.forEach( (cell: Cell) => cell.render() );
     }
 }

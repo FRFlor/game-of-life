@@ -1,4 +1,4 @@
 export default class Configurations {
-    public static readonly columnCount: number = 10;
-    public static readonly rowCount: number = 10;
+    public static columnCount: number = 10;
+    public static rowCount: number = 10;
 }
