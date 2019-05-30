@@ -1,19 +1,40 @@
 import {GridCoordinates} from '@/types';
 import Configurations from '@/classes/Configurations';
 
+export enum State {
+    Pending,
+    Dead,
+    Alive,
+}
+
 export default class Cell {
     public readonly neighbours: Cell[] = [];
+    public currentState: State = State.Dead;
+    public futureState: State = State.Pending;
     private position: GridCoordinates;
     private ctx: CanvasRenderingContext2D;
 
-    constructor(ctx: CanvasRenderingContext2D, position: GridCoordinates) {
+    constructor(ctx: CanvasRenderingContext2D, position: GridCoordinates, isAlive: boolean = false) {
+        this.currentState = isAlive ? State.Alive : State.Dead;
         this.ctx = ctx;
         this.position = position;
+    }
+
+    public update(): void {
+        if (this.futureState !== State.Pending) {
+            return;
+        }
+        this.defineFutureState();
     }
 
     public render(): void {
         this.ctx.fillStyle = this.color;
         this.ctx.fillRect(this.x0, this.y0, this.width, this.height);
+    }
+
+    public turnFutureIntoCurrentState(): void {
+        this.currentState = this.futureState;
+        this.futureState = State.Pending;
     }
 
     public get x0(): number {
@@ -37,10 +58,7 @@ export default class Cell {
     }
 
     private get color(): string {
-        const hue: number = 50 * this.index;
-        const randomBetween = (max: number, min: number): number => Math.floor(Math.random() * (max - min + 1) + min);
-
-        return `hsl(${hue},${randomBetween(50, 100)}%,${randomBetween(50, 100)}%)`;
+        return this.currentState === State.Alive ? 'hsl(21,68%,56%)' : 'hsl(0, 0%, 15%)';
     }
 
     private get width(): number {
@@ -49,5 +67,24 @@ export default class Cell {
 
     private get height(): number {
         return Math.ceil(this.ctx.canvas.width / Configurations.rowCount);
+    }
+
+    private defineFutureState(): void {
+        if (this.currentState === State.Dead && this.numberOfLivingNeighbours === 3) {
+            this.futureState = State.Alive;
+            return;
+        }
+
+        if ((this.currentState === State.Alive) &&
+            (this.numberOfLivingNeighbours < 2 || this.numberOfLivingNeighbours > 3)) {
+            this.futureState = State.Dead;
+            return;
+        }
+
+        this.futureState = this.currentState;
+    }
+
+    private get numberOfLivingNeighbours(): number {
+        return this.neighbours.filter((cell: Cell) => cell.currentState === State.Alive).length;
     }
 }

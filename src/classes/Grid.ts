@@ -8,9 +8,9 @@ export default class Grid {
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
-        for (let column = 0; column < Configurations.columnCount; column++) {
-            for (let row = 0; row < Configurations.rowCount; row++) {
-                this.cells.push(new Cell(ctx, {row, column}));
+        for (let row = 0; row < Configurations.rowCount; row++) {
+            for (let column = 0; column < Configurations.columnCount; column++) {
+                this.cells.push(new Cell(ctx, {row, column}, Math.random() < 0.65));
             }
         }
 
@@ -25,6 +25,12 @@ export default class Grid {
 
     public getCellAt({row, column}: GridCoordinates): Cell {
         return this.cells[column + row * Configurations.columnCount];
+    }
+
+    public update(): void {
+        this.cells.forEach((cell: Cell) => cell.update());
+        this.cells.forEach((cell: Cell) => cell.turnFutureIntoCurrentState());
+        this.render();
     }
 
     private linkCellsAsNeighbours(): void {
