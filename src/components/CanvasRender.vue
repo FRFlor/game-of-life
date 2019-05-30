@@ -27,5 +27,8 @@
     }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
+    .canvas-render {
+        margin: 3rem;
+    }
 </style>
