@@ -8,8 +8,10 @@ export enum State {
 }
 
 export default class Cell {
+    // fadeRates are the delta opacity per tick.
+    // e.g. A fadeOutRate of 50 would mean that a former living takes 2 ticks to fully disappear from the grid
     private static readonly fadeInRate: number = 50;
-    private static readonly fadeOutRate: number = 35;
+    private static readonly fadeOutRate: number = 30;
     public readonly neighbours: Cell[] = [];
     public currentState: State = State.Dead;
     public futureState: State = State.Pending;
@@ -35,7 +37,7 @@ export default class Cell {
 
     public render(): void {
         this.ctx.fillStyle = this.color;
-        this.ctx.fillRect(this.x0, this.y0, this.width, this.height);
+        this.ctx.fillRect(this.x0, this.y0, this.width * 0.85, this.height * 0.85);
     }
 
     public turnFutureIntoCurrentState(): void {
