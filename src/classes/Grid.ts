@@ -1,6 +1,6 @@
 import Cell from '@/classes/Cell';
 import Configurations from '@/classes/Configurations';
-import {GridCoordinates} from '@/types';
+import {IGridCoordinates} from '@/types';
 
 export default class Grid {
     private ctx: CanvasRenderingContext2D;
@@ -25,7 +25,7 @@ export default class Grid {
         this.ctx.fillStyle = 'hsla(0, 0%, 0%, 0.33)';
     }
 
-    public getCellAt({row, column}: GridCoordinates): Cell {
+    public getCellAt({row, column}: IGridCoordinates): Cell {
         return this.cells[column + row * Configurations.columnCount];
     }
 
@@ -38,16 +38,7 @@ export default class Grid {
     private linkCellsAsNeighbours(): void {
         this.cells.forEach((mainCell: Cell) => {
             const adjacentCells: Cell[] = this.cells.filter((otherCell: Cell) => {
-                if (mainCell === otherCell) {
-                    return false;
-                }
-
-                if (Math.abs(mainCell.row - otherCell.row) > 1 ||
-                    Math.abs(mainCell.column - otherCell.column) > 1) {
-                    return false;
-                }
-
-                return true;
+                return mainCell.position.isAdjacentTo(otherCell.position);
             });
 
             mainCell.neighbours.push(...adjacentCells);

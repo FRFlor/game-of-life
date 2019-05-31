@@ -1,8 +1,9 @@
 import Grid from '@/classes/Grid';
 import Configurations from '@/classes/Configurations';
 import Cell, {State} from '@/classes/Cell';
+import {IGridCoordinates} from '@/types';
 
-const cellSort = (left: Cell, right: Cell): number => {
+const sortCoordinates = (left: IGridCoordinates, right: IGridCoordinates): number => {
     const leftIndex: number = left.column + left.row * Configurations.columnCount;
     const rightIndex: number = right.column + right.row * Configurations.columnCount;
 
@@ -38,35 +39,52 @@ describe('Grid', () => {
                 const grid: Grid = new Grid(ctx);
 
                 const referenceCell: Cell = grid.getCellAt({row: 1, column: 1});
-                const expectedNeighbours: Cell[] = [
-                    grid.getCellAt({row: 0, column: 0}),
-                    grid.getCellAt({row: 0, column: 1}),
-                    grid.getCellAt({row: 0, column: 2}),
-                    grid.getCellAt({row: 1, column: 0}),
-                    grid.getCellAt({row: 1, column: 2}),
-                    grid.getCellAt({row: 2, column: 0}),
-                    grid.getCellAt({row: 2, column: 1}),
-                    grid.getCellAt({row: 2, column: 2}),
-                ];
+                const expectedNeighboursCoordinates: IGridCoordinates[] = [
+                    {row: 0, column: 0},
+                    {row: 0, column: 1},
+                    {row: 0, column: 2},
+                    {row: 1, column: 0},
+                    {row: 1, column: 2},
+                    {row: 2, column: 0},
+                    {row: 2, column: 1},
+                    {row: 2, column: 2},
+                ].sort(sortCoordinates);
+                const actualNeighboursCoordinates: IGridCoordinates[] = referenceCell.neighbours
+                    .map((neighbour: Cell) => neighbour.position)
+                    .sort(sortCoordinates);
 
-                expect(referenceCell.neighbours.sort(cellSort)).toEqual(expectedNeighbours.sort(cellSort));
+                expect(actualNeighboursCoordinates).toEqual(expectedNeighboursCoordinates);
             });
 
 
             it.each`
         position | neighbours
         ${{row: 0, column: 0}} | ${[
-                {row: 0, column: 1},
-                {row: 1, column: 1}, {row: 1, column: 0},
+                {row: 0, column: 1}, {row: 0, column: 3},
+                {row: 1, column: 0}, {row: 1, column: 1}, {row: 1, column: 3},
+                {row: 3, column: 0}, {row: 3, column: 1}, {row: 3, column: 3},
             ]}
 
-        ${{row: 0, column: 1}} | ${[
-                {row: 0, column: 0}, {row: 0, column: 2},
-                {row: 1, column: 1}, {row: 1, column: 2}, {row: 1, column: 0},
+        ${{row: 3, column: 1}} | ${[
+                {row: 0, column: 0}, {row: 0, column: 1}, {row: 0, column: 2},
+                {row: 2, column: 0}, {row: 2, column: 1}, {row: 2, column: 2},
+                {row: 3, column: 0}, {row: 3, column: 2},
             ]}
-        `('Hey', () => {
-                expect(true).toBe(true);
-            });
+        `('At the edge: $position',
+                ({position, neighbours}: { position: IGridCoordinates, neighbours: IGridCoordinates[] }) => {
+                    Configurations.rowCount = 4;
+                    Configurations.columnCount = 4;
+
+                    const grid: Grid = new Grid(ctx);
+
+                    const referenceCell: Cell = grid.getCellAt(position);
+                    const expectedNeighboursCoordinates: IGridCoordinates[] = neighbours.sort(sortCoordinates);
+                    const actualNeighboursCoordinates: IGridCoordinates[] = referenceCell.neighbours
+                        .map((neighbour: Cell) => neighbour.position)
+                        .sort(sortCoordinates);
+
+                    expect(actualNeighboursCoordinates).toEqual(expectedNeighboursCoordinates);
+                });
         },
     );
 
