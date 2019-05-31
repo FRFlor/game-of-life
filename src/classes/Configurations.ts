@@ -1,5 +1,5 @@
 export default class Configurations {
-    public static columnCount: number = 100;
+    public static columnCount: number = 200;
     public static rowCount: number = 100;
     public static framesPerSecond: number = 15;
 

@@ -1,6 +1,6 @@
 <template>
     <div class="canvas-render">
-        <canvas id="canvas" :height="canvasHeight" :width="canvasWidth"></canvas>
+        <canvas id="canvas" height="600px" width="1200px"></canvas>
     </div>
 </template>
 
@@ -30,14 +30,6 @@
                     this.gameOfLife.update();
                 }
             }, Configurations.updateInterval);
-        }
-
-        protected get canvasHeight(): number {
-            return Math.floor(window.innerHeight * 0.65);
-        }
-
-        protected get canvasWidth(): number {
-            return Math.floor(window.innerWidth * 0.65);
         }
     }
 </script>
