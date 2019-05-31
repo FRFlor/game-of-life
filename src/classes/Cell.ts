@@ -12,10 +12,6 @@ export default class Cell {
         Cell.ctx = ctx;
     }
 
-    // fadeRates are the delta opacity per tick.
-    // e.g. A fadeOutRate of 50 would mean that a former living takes 2 ticks to fully disappear from the grid
-    private static readonly fadeInRate: number = 50;
-    private static readonly fadeOutRate: number = 30;
     private static ctx: CanvasRenderingContext2D;
 
     public readonly neighbours: Cell[] = [];
@@ -23,11 +19,9 @@ export default class Cell {
     public futureState: State = State.Pending;
     private position: GridCoordinates;
     private age: number = 0;
-    private opacity: number;
 
     constructor(position: GridCoordinates, isAlive: boolean = false) {
         this.currentState = isAlive ? State.Alive : State.Dead;
-        this.opacity = isAlive ? 100 : 0;
         this.position = position;
     }
 
@@ -36,10 +30,12 @@ export default class Cell {
             return;
         }
         this.defineFutureState();
-        this.updateOpacity();
     }
 
     public render(): void {
+        if (this.isDead) {
+            return;
+        }
         Cell.ctx.fillStyle = this.color;
         Cell.ctx.fillRect(this.x0, this.y0, Cell.width * 0.85, Cell.height * 0.85);
     }
@@ -47,18 +43,6 @@ export default class Cell {
     public turnFutureIntoCurrentState(): void {
         this.currentState = this.futureState;
         this.futureState = State.Pending;
-    }
-
-    private updateOpacity(): void {
-        const delta: number = this.isAlive ? Cell.fadeInRate : -Cell.fadeOutRate;
-        this.opacity += delta;
-
-        if (this.opacity < 0) {
-            this.opacity = 0;
-        }
-        if (this.opacity > 100) {
-            this.opacity = 100;
-        }
     }
 
     private defineFutureState(): void {
@@ -97,7 +81,7 @@ export default class Cell {
 
     private get color(): string {
         const hue: number = this.age * 5;
-        return `hsla(${hue},68%,56%, ${this.opacity / 100})`;
+        return `hsl(${hue},68%,56%)`;
     }
 
     private static get width(): number {

@@ -11,17 +11,18 @@ export default class Grid {
         Cell.setRenderer(ctx);
         for (let row = 0; row < Configurations.rowCount; row++) {
             for (let column = 0; column < Configurations.columnCount; column++) {
-                this.cells.push(new Cell({row, column}, Math.random() < 0.65));
+                this.cells.push(new Cell({row, column}, Math.random() < 0.25));
             }
         }
 
         this.linkCellsAsNeighbours();
+        this.ctx.fillStyle = 'hsl(0, 0%, 0%)';
     }
 
     public render(): void {
-        this.ctx.fillStyle = 'hsl(0, 0%, 15%)';
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.cells.forEach((cell: Cell) => cell.render());
+        this.ctx.fillStyle = 'hsla(0, 0%, 0%, 0.33)';
     }
 
     public getCellAt({row, column}: GridCoordinates): Cell {
