@@ -8,22 +8,26 @@ export enum State {
 }
 
 export default class Cell {
+    public static setRenderer(ctx: CanvasRenderingContext2D): void {
+        Cell.ctx = ctx;
+    }
+
     // fadeRates are the delta opacity per tick.
     // e.g. A fadeOutRate of 50 would mean that a former living takes 2 ticks to fully disappear from the grid
     private static readonly fadeInRate: number = 50;
     private static readonly fadeOutRate: number = 30;
+    private static ctx: CanvasRenderingContext2D;
+
     public readonly neighbours: Cell[] = [];
     public currentState: State = State.Dead;
     public futureState: State = State.Pending;
     private position: GridCoordinates;
     private age: number = 0;
     private opacity: number;
-    private ctx: CanvasRenderingContext2D;
 
-    constructor(ctx: CanvasRenderingContext2D, position: GridCoordinates, isAlive: boolean = false) {
+    constructor(position: GridCoordinates, isAlive: boolean = false) {
         this.currentState = isAlive ? State.Alive : State.Dead;
         this.opacity = isAlive ? 100 : 0;
-        this.ctx = ctx;
         this.position = position;
     }
 
@@ -36,8 +40,8 @@ export default class Cell {
     }
 
     public render(): void {
-        this.ctx.fillStyle = this.color;
-        this.ctx.fillRect(this.x0, this.y0, this.width * 0.85, this.height * 0.85);
+        Cell.ctx.fillStyle = this.color;
+        Cell.ctx.fillRect(this.x0, this.y0, Cell.width * 0.85, Cell.height * 0.85);
     }
 
     public turnFutureIntoCurrentState(): void {
@@ -76,11 +80,11 @@ export default class Cell {
     }
 
     public get x0(): number {
-        return this.position.column * this.width;
+        return this.position.column * Cell.width;
     }
 
     public get y0(): number {
-        return this.position.row * this.height;
+        return this.position.row * Cell.height;
     }
 
     public get row(): number {
@@ -91,21 +95,17 @@ export default class Cell {
         return this.position.column;
     }
 
-    public get index(): number {
-        return this.position.column + this.position.row * Configurations.columnCount;
-    }
-
     private get color(): string {
         const hue: number = this.age * 5;
         return `hsla(${hue},68%,56%, ${this.opacity / 100})`;
     }
 
-    private get width(): number {
-        return Math.ceil(this.ctx.canvas.width / Configurations.columnCount);
+    private static get width(): number {
+        return Math.ceil(Cell.ctx.canvas.width / Configurations.columnCount);
     }
 
-    private get height(): number {
-        return Math.ceil(this.ctx.canvas.height / Configurations.rowCount);
+    private static get height(): number {
+        return Math.ceil(Cell.ctx.canvas.height / Configurations.rowCount);
     }
 
     private get numberOfLivingNeighbours(): number {

@@ -13,6 +13,7 @@ describe('Cell', () => {
         Configurations.rowCount = 3;
         Configurations.columnCount = 3;
         ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        Cell.setRenderer(ctx);
     });
 
     describe('Renders to the correct canvas coordinates', () => {
@@ -28,7 +29,7 @@ describe('Cell', () => {
         ${2} | ${1} | ${10} | ${20}
         ${2} | ${2} | ${20} | ${20}
         `('On a 3x3 grid - for row: $row, column: $column', ({row, column, x, y}: any) => {
-            const cell: Cell = new Cell(ctx, {row, column});
+            const cell: Cell = new Cell({row, column});
             const expected = { x, y };
             const actual = {x: cell.x0, y: cell.y0};
             expect(expected).toEqual(actual);

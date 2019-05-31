@@ -8,9 +8,10 @@ export default class Grid {
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
+        Cell.setRenderer(ctx);
         for (let row = 0; row < Configurations.rowCount; row++) {
             for (let column = 0; column < Configurations.columnCount; column++) {
-                this.cells.push(new Cell(ctx, {row, column}, Math.random() < 0.65));
+                this.cells.push(new Cell({row, column}, Math.random() < 0.65));
             }
         }
 
