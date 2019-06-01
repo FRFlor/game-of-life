@@ -1,6 +1,5 @@
 import {IGridCoordinates} from '@/types';
 import Configurations from '@/classes/Configurations';
-import GridCoordinates from '@/classes/GridCoordinates';
 
 export enum State {
     Pending,
@@ -18,12 +17,12 @@ export default class Cell {
     public readonly neighbours: Cell[] = [];
     public currentState: State = State.Dead;
     public futureState: State = State.Pending;
-    public position: GridCoordinates;
+    public position: IGridCoordinates;
     private age: number = 0;
 
     constructor(position: IGridCoordinates, isAlive: boolean = false) {
         this.currentState = isAlive ? State.Alive : State.Dead;
-        this.position = new GridCoordinates(position.row, position.column);
+        this.position = position;
     }
 
     public update(): void {
