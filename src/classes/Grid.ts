@@ -1,7 +1,7 @@
 import Cell from '@/classes/Cell';
 import Configurations from '@/classes/Configurations';
 import {IGridCoordinates} from '@/types';
-import Glider from './patterns/Glider';
+import Glider, {GliderDirection} from './patterns/Glider';
 
 export default class Grid {
     private ctx: CanvasRenderingContext2D;
@@ -75,6 +75,10 @@ export default class Grid {
         const y: number = event.pageY - baseY;
         const column: number = Math.floor(Configurations.columnCount * x / this.ctx.canvas.width);
         const row: number = Math.floor(Configurations.rowCount * y / this.ctx.canvas.height);
-        Glider.PlaceAt(this, {row, column});
+
+        Glider.PlaceAt(this, {row: row - 2, column: column - 2}, GliderDirection.NorthWest);
+        Glider.PlaceAt(this, {row: row - 2, column: column + 2}, GliderDirection.NorthEast);
+        Glider.PlaceAt(this, {row: row + 2, column: column + 2}, GliderDirection.SouthEast);
+        Glider.PlaceAt(this, {row: row + 2, column: column - 2}, GliderDirection.SouthWest);
     }
 }
