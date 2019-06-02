@@ -32,7 +32,7 @@ export default class Grid {
 
     public getCellAt({row, column}: IGridCoordinates): Cell {
         const rowWithWrapping: number = (row + Configurations.rowCount) % Configurations.rowCount;
-        const columnWithWrapping: number = (column + Configurations.rowCount) % Configurations.rowCount;
+        const columnWithWrapping: number = (column + Configurations.columnCount) % Configurations.columnCount;
 
         return this.cells[rowWithWrapping][columnWithWrapping];
     }
