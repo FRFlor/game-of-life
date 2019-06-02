@@ -1,7 +1,6 @@
 import Cell from '@/classes/Cell';
 import Configurations from '@/classes/Configurations';
 import {IGridCoordinates} from '@/types';
-import Glider, {GliderDirection} from './patterns/Glider';
 
 export default class Grid {
     private ctx: CanvasRenderingContext2D;
@@ -20,8 +19,6 @@ export default class Grid {
         this.linkCellsAsNeighbours();
         this.ctx.fillStyle = 'hsl(0, 0%, 0%)';
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-
-        this.ctx.canvas.addEventListener('click', this.addGlider.bind(this), false);
     }
 
     public render(): void {
@@ -65,20 +62,5 @@ export default class Grid {
                 callback(this.cells[row][column], row, column);
             }
         }
-    }
-
-    private addGlider(event: any): void {
-        const baseX: number = this.ctx.canvas.offsetLeft;
-        const baseY: number = this.ctx.canvas.offsetTop;
-
-        const x: number = event.pageX - baseX;
-        const y: number = event.pageY - baseY;
-        const column: number = Math.floor(Configurations.columnCount * x / this.ctx.canvas.width);
-        const row: number = Math.floor(Configurations.rowCount * y / this.ctx.canvas.height);
-
-        Glider.PlaceAt(this, {row: row - 2, column: column - 2}, GliderDirection.NorthWest);
-        Glider.PlaceAt(this, {row: row - 2, column: column + 2}, GliderDirection.NorthEast);
-        Glider.PlaceAt(this, {row: row + 2, column: column + 2}, GliderDirection.SouthEast);
-        Glider.PlaceAt(this, {row: row + 2, column: column - 2}, GliderDirection.SouthWest);
     }
 }

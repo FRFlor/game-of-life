@@ -40,6 +40,11 @@ export default class Cell {
         Cell.ctx.fillRect(this.x0, this.y0, Cell.width * 0.85, Cell.height * 0.85);
     }
 
+    public highlight(color: string): void {
+        Cell.ctx.fillStyle = color;
+        Cell.ctx.fillRect(this.x0, this.y0, Cell.width * 0.85, Cell.height * 0.85);
+    }
+
     public turnFutureIntoCurrentState(): void {
         this.currentState = this.futureState;
         this.futureState = State.Pending;
