@@ -19,14 +19,15 @@ export default class Grid {
 
         this.linkCellsAsNeighbours();
         this.ctx.fillStyle = 'hsl(0, 0%, 0%)';
+        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
         this.ctx.canvas.addEventListener('click', this.addGlider.bind(this), false);
     }
 
     public render(): void {
+        this.ctx.fillStyle = 'hsla(0, 0%, 0%, 0.33)'; // Fade-out for old cells
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.forEachCell((cell: Cell) => cell.render());
-        this.ctx.fillStyle = 'hsla(0, 0%, 0%, 0.33)';
     }
 
     public getCellAt({row, column}: IGridCoordinates): Cell {
