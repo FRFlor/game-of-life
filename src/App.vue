@@ -1,16 +1,16 @@
 <template>
     <div id="app">
-        <canvas-render/>
+        <game-of-life-render/>
     </div>
 </template>
 
 <script lang="ts">
     import {Component, Vue} from 'vue-property-decorator';
-    import CanvasRender from './components/CanvasRender.vue';
+    import GameOfLifeRender from './components/GameOfLifeRender.vue';
 
     @Component({
         components: {
-            CanvasRender,
+            GameOfLifeRender,
         },
     })
     export default class App extends Vue {
