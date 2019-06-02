@@ -23,10 +23,10 @@ export default class InteractiveGameOfLife {
 
     private addGlider(event: any): void {
         const {row, column} = this.getGridCoordinatesFromMouseEvent(event);
-        Glider.PlaceAt(this.grid, {row: row - 2, column: column - 2}, GliderDirection.NorthWest);
-        Glider.PlaceAt(this.grid, {row: row - 2, column: column + 2}, GliderDirection.NorthEast);
+        Glider.PlaceAt(this.grid, {row: row - 4, column: column - 4}, GliderDirection.NorthWest);
+        Glider.PlaceAt(this.grid, {row: row - 4, column: column + 2}, GliderDirection.NorthEast);
         Glider.PlaceAt(this.grid, {row: row + 2, column: column + 2}, GliderDirection.SouthEast);
-        Glider.PlaceAt(this.grid, {row: row + 2, column: column - 2}, GliderDirection.SouthWest);
+        Glider.PlaceAt(this.grid, {row: row + 2, column: column - 4}, GliderDirection.SouthWest);
     }
 
     private renderCursor(): void {
