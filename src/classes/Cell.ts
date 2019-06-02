@@ -76,14 +76,6 @@ export default class Cell {
         return this.position.row * Cell.height;
     }
 
-    public get row(): number {
-        return this.position.row;
-    }
-
-    public get column(): number {
-        return this.position.column;
-    }
-
     private get color(): string {
         const hue: number = this.age * 5;
         return `hsl(${hue},68%,56%)`;
