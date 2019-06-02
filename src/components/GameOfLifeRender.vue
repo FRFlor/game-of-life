@@ -34,7 +34,9 @@
 </script>
 
 <style scoped lang="scss">
-    .canvas-render {
-
+    #canvas {
+        border-radius: 2rem;
+        box-shadow: 10px 10px 15px 0 rgba(0,0,0,0.4);
+        margin: 3rem;
     }
 </style>
