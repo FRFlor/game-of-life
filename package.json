@@ -27,6 +27,7 @@
     "sass-loader": "^7.1.0",
     "ts-jest": "^23.0.0",
     "typescript": "^3.4.3",
+    "vue-slider-component": "^3.0.31",
     "vue-template-compiler": "^2.6.10"
   }
 }
