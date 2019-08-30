@@ -1,13 +1,15 @@
 <template>
     <div class="canvas-render">
         <div class="slider-container">
-            <label for="fps-slider">FPS: {{fps}}</label>
+            <label for="fps-slider">FPS:</label>
             <vue-slider id="fps-slider"
+                        height="20px"
                         :marks="[0, 5, 10, 15, 20, 25, 30]"
                         v-model="fps"
                         :min="0"
                         :max="30"
-                        interval="1"></vue-slider>
+                        tooltip-formatter="{value} fps"
+                        :interval="1"></vue-slider>
         </div>
 
         <canvas id="canvas" height="750px" width="1500px"></canvas>
@@ -19,7 +21,6 @@
     import Configurations from '@/classes/Configurations';
     import InteractiveGameOfLife from '@/classes/InteractiveGameOfLife';
     import VueSlider from 'vue-slider-component';
-    import 'vue-slider-component/theme/antd.css';
 
     @Component({
         components: {VueSlider},
@@ -66,9 +67,15 @@
 </script>
 
 <style scoped lang="scss">
+    @import '~vue-slider-component/theme/default.css';
+
     #canvas {
         border-radius: 2rem;
         box-shadow: 10px 10px 15px 0 rgba(0, 0, 0, 0.4);
+    }
+
+    .slider-container {
+        padding-bottom: 3rem;
     }
 
     .slider-container {
