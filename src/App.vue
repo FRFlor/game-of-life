@@ -2,21 +2,7 @@
     <div>
         <canvas id="canvas" :width="width" :height="height"/>
 
-        <div class="controls">
-            <div class="slider-container">
-                <label for="fps-slider">FPS:</label>
-                <vue-slider id="fps-slider"
-                            height="20px"
-                            :marks="[0, 5, 10, 15, 20, 25, 30]"
-                            v-model="fps"
-                            :min="0"
-                            :max="30"
-                            tooltip-formatter="{value} fps"
-                            :interval="1"></vue-slider>
-            </div>
-        </div>
-
-
+        <control-panel v-model="settings"/>
     </div>
 </template>
 
@@ -24,15 +10,17 @@
     import {Component, Vue, Watch} from 'vue-property-decorator';
     import InteractiveGameOfLife from '@/classes/InteractiveGameOfLife';
     import VueSlider from 'vue-slider-component';
+    import ControlPanel from '@/components/ControlPanel.vue';
+    import {ControlPanelSettings} from '@/types';
 
     @Component({
-        components: {VueSlider},
+        components: {ControlPanel, VueSlider},
     })
     export default class App extends Vue {
         protected canvas?: HTMLCanvasElement;
         protected loopInterval: any;
         protected gameOfLife?: InteractiveGameOfLife;
-        protected fps: number = 15;
+        protected settings: ControlPanelSettings = { framesPerSecond: 15 };
         protected width: number = 0;
         protected height: number = 0;
 
@@ -71,13 +59,13 @@
 
         }
 
-        @Watch('fps')
+        @Watch('settings.framesPerSecond')
         protected updateGameLoop(): void {
             if (this.loopInterval) {
                 clearInterval(this.loopInterval);
             }
 
-            if (this.fps === 0) {
+            if (this.settings.framesPerSecond === 0) {
                 return;
             }
 
@@ -85,7 +73,7 @@
                 if (this.gameOfLife) {
                     this.gameOfLife.update();
                 }
-            }, Math.floor(1000 / this.fps));
+            }, Math.floor(1000 / this.settings.framesPerSecond));
         }
 
     }
