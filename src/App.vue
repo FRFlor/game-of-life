@@ -20,7 +20,10 @@
         protected canvas?: HTMLCanvasElement;
         protected loopInterval: any;
         protected gameOfLife?: InteractiveGameOfLife;
-        protected settings: ControlPanelSettings = { framesPerSecond: 15 };
+        protected settings: ControlPanelSettings = {
+            framesPerSecond: 15,
+            numberOfColumns: 150,
+        };
         protected width: number = 0;
         protected height: number = 0;
 
@@ -42,6 +45,7 @@
             }
         }
 
+        @Watch('settings.numberOfColumns')
         protected restartCanvas(): void {
             this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
 
@@ -50,7 +54,7 @@
                 return;
             }
 
-            const columnCount = 150;
+            const columnCount = this.settings.numberOfColumns;
             const rowCount = Math.floor(columnCount * this.height / this.width);
             this.$nextTick(() => {
                 this.gameOfLife = new InteractiveGameOfLife(context, columnCount, rowCount);

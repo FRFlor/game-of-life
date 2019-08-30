@@ -5,4 +5,5 @@ export interface IGridCoordinates {
 
 export interface ControlPanelSettings {
     framesPerSecond: number;
+    numberOfColumns: number;
 }

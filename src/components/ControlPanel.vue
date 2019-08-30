@@ -13,6 +13,17 @@
                         tooltip-formatter="{value} fps"
                         :interval="1"></vue-slider>
         </div>
+        <div class="slider-container">
+            <label for="fps-slider">Number of Columns:</label>
+            <vue-slider id="columns-slider"
+                        height="20px"
+                        :marks="[50, 100, 150, 200, 250, 300]"
+                        v-model="settings.numberOfColumns"
+                        :min="25"
+                        :max="300"
+                        tooltip-formatter="{value} columns"
+                        :interval="5"></vue-slider>
+        </div>
     </div>
 </template>
 
@@ -34,6 +45,7 @@
         protected isExpanded: boolean = false;
 
         @Watch('settings.framesPerSecond')
+        @Watch('settings.numberOfColumns')
         protected updateSettings(): void {
             this.$emit('settings-changed', this.settings);
         }
@@ -85,8 +97,8 @@
         &:not(.is-expanded) {
             padding: 0;
             .slider-container {
-                width: 1px;
-                height: 1px;
+                width: 0;
+                height: 0;
                 opacity: 0;
                 padding: 0;
             }
@@ -96,7 +108,5 @@
                 margin-bottom: 0;
             }
         }
-
-
     }
 </style>
