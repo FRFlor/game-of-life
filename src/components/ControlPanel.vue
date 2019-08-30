@@ -19,7 +19,7 @@
                         height="20px"
                         :marks="[50, 100, 150, 200, 250, 300]"
                         v-model="settings.numberOfColumns"
-                        :min="25"
+                        :min="50"
                         :max="300"
                         tooltip-formatter="{value} columns"
                         :interval="5"></vue-slider>
@@ -69,6 +69,10 @@
         }
     }
 
+    .spin {
+        animation: fa-spin 2s infinite linear;
+    }
+
     .controls {
         position: absolute;
         z-index: 2;
@@ -84,6 +88,12 @@
             width: 3rem;
             font-size: 1.5rem;
             color: hsl(0, 0%, 50%);
+            &:hover {
+                cursor: pointer;
+                i {
+                    @extend .spin;
+                }
+            }
         }
 
         .slider-container {
