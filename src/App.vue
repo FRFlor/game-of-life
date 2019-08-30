@@ -91,21 +91,6 @@
         overflow: hidden;
     }
 
-    .controls {
-        position: absolute;
-        z-index: 2;
-        top: 35px;
-        left: 35px;
-        background-color: hsla(0, 0%, 100%, 0.85);
-        border-radius: 2rem;
-        box-shadow: 10px 10px 15px 0 rgba(0, 0, 0, 0.4);
-        padding: 2rem;
-        .slider-container {
-            width: calc(var(--window-width) * 0.8 - 35px);
-            max-width: 50rem;
-        }
-    }
-
     #canvas {
         position: absolute;
         top: 0;

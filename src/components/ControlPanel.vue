@@ -1,11 +1,13 @@
 <template>
-    <div class="controls">
+    <div class="controls"
+         :class="{'is-expanded' : isExpanded}">
+        <button class="expand-panel" @click="isExpanded = !isExpanded"><i class="fa fa-cog"></i></button>
         <div class="slider-container">
             <label for="fps-slider">FPS:</label>
             <vue-slider id="fps-slider"
                         height="20px"
                         :marks="[0, 5, 10, 15, 20, 25, 30]"
-                        v-model="fps"
+                        v-model="settings.framesPerSecond"
                         :min="0"
                         :max="30"
                         tooltip-formatter="{value} fps"
@@ -15,7 +17,7 @@
 </template>
 
 <script lang="ts">
-    import {Component, Vue, Prop, Watch} from 'vue-property-decorator';
+    import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
     import VueSlider from 'vue-slider-component';
     import {ControlPanelSettings} from '@/types';
 
@@ -28,12 +30,12 @@
     })
     export default class ControlPanel extends Vue {
         @Prop() protected originalSettings!: ControlPanelSettings;
-        protected fps: number = this.originalSettings.framesPerSecond;
+        protected settings: ControlPanelSettings = Object.assign({}, this.originalSettings);
+        protected isExpanded: boolean = false;
 
-        @Watch('fps')
-        protected updateFps(): void {
-            const newSettings: ControlPanelSettings = {...this.originalSettings, framesPerSecond: this.fps};
-            this.$emit('settings-changed', newSettings);
+        @Watch('settings.framesPerSecond')
+        protected updateSettings(): void {
+            this.$emit('settings-changed', this.settings);
         }
     }
 </script>
@@ -43,18 +45,58 @@
     @import '~vue-slider-component/theme/default.css';
 
     .controls {
+        --margin-for-panel: 5px;
+        --padding-for-panel: 1rem;
+    }
+    @media (min-width: 425px) {
+        body {
+            .controls {
+                --margin-for-panel: 35px;
+                --padding-for-panel: 2rem;
+            }
+        }
+    }
+
+    .controls {
         position: absolute;
         z-index: 2;
-        top: 35px;
-        left: 35px;
+        top: var(--margin-for-panel);
+        left: var(--margin-for-panel);
         background-color: hsla(0, 0%, 100%, 0.85);
-        border-radius: 2rem;
+        border-radius: var(--padding-for-panel);
         box-shadow: 10px 10px 15px 0 rgba(0, 0, 0, 0.4);
-        padding: 2rem;
+        padding: var(--padding-for-panel);
+
+        button.expand-panel {
+            height: 2rem;
+            width: 3rem;
+            font-size: 1.5rem;
+            color: hsl(0, 0%, 50%);
+        }
 
         .slider-container {
+            transition: width 200ms ease, height 300ms ease, opacity 100ms ease;
+            opacity: 100%;
             width: calc(var(--window-width) * 0.8 - 35px);
             max-width: 50rem;
+            padding: var(--padding-for-panel);
         }
+
+        &:not(.is-expanded) {
+            padding: 0;
+            .slider-container {
+                width: 1px;
+                height: 1px;
+                opacity: 0;
+                padding: 0;
+            }
+
+            button.expand-panel {
+                color: hsl(0, 0%, 10%);
+                margin-bottom: 0;
+            }
+        }
+
+
     }
 </style>
