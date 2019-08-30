@@ -1,5 +1,4 @@
 import {IGridCoordinates} from '@/types';
-import Configurations from '@/classes/Configurations';
 
 export enum State {
     Pending,
@@ -12,7 +11,14 @@ export default class Cell {
         Cell.ctx = ctx;
     }
 
+    public static setDimensions(cellWidth: number, cellHeight: number) {
+        Cell.width = cellWidth;
+        Cell.height = cellHeight;
+    }
+
     private static ctx: CanvasRenderingContext2D;
+    private static width: number = 0;
+    private static height: number = 0;
 
     public readonly neighbours: Cell[] = [];
     public currentState: State = State.Dead;
@@ -79,14 +85,6 @@ export default class Cell {
     private get color(): string {
         const hue: number = this.age * 5;
         return `hsl(${hue},68%,56%)`;
-    }
-
-    private static get width(): number {
-        return Math.ceil(Cell.ctx.canvas.width / Configurations.columnCount);
-    }
-
-    private static get height(): number {
-        return Math.ceil(Cell.ctx.canvas.height / Configurations.rowCount);
     }
 
     private get numberOfLivingNeighbours(): number {

@@ -1,42 +1,42 @@
 import Grid from '@/classes/Grid';
-import Configurations from '@/classes/Configurations';
 import Cell, {State} from '@/classes/Cell';
 import {IGridCoordinates} from '@/types';
 
-const sortCoordinates = (left: IGridCoordinates, right: IGridCoordinates): number => {
-    const leftIndex: number = left.column + left.row * Configurations.columnCount;
-    const rightIndex: number = right.column + right.row * Configurations.columnCount;
-
-    if (leftIndex < rightIndex) {
-        return -1;
-    }
-
-    if (leftIndex > rightIndex) {
-        return 1;
-    }
-
-    return 0;
-};
 
 describe('Grid', () => {
     let canvas: HTMLCanvasElement;
     const canvasSize: number = 30;
     let ctx: CanvasRenderingContext2D;
+    let columnCount = 1;
+    let rowCount = 1;
+
+    const sortCoordinates = (left: IGridCoordinates, right: IGridCoordinates): number => {
+        const leftIndex: number = left.column + left.row * columnCount;
+        const rightIndex: number = right.column + right.row * rowCount;
+
+        if (leftIndex < rightIndex) {
+            return -1;
+        }
+
+        if (leftIndex > rightIndex) {
+            return 1;
+        }
+
+        return 0;
+    };
 
     beforeEach(() => {
         canvas = document.createElement('canvas');
         canvas.width = canvasSize;
         canvas.height = canvasSize;
-        Configurations.rowCount = 3;
-        Configurations.columnCount = 3;
         ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
     });
 
     describe('Determines the correct neighbours for cells', () => {
             it('When a cell is in the middle of the grid', () => {
-                Configurations.rowCount = 3;
-                Configurations.columnCount = 3;
-                const grid: Grid = new Grid(ctx);
+                columnCount = 3;
+                rowCount = 3;
+                const grid: Grid = new Grid(ctx, columnCount, rowCount);
 
                 const referenceCell: Cell = grid.getCellAt({row: 1, column: 1});
                 const expectedNeighboursCoordinates: IGridCoordinates[] = [
@@ -72,10 +72,10 @@ describe('Grid', () => {
             ]}
         `('At the edge: $position',
                 ({position, neighbours}: { position: IGridCoordinates, neighbours: IGridCoordinates[] }) => {
-                    Configurations.rowCount = 4;
-                    Configurations.columnCount = 4;
+                    rowCount = 4;
+                    columnCount = 4;
 
-                    const grid: Grid = new Grid(ctx);
+                    const grid: Grid = new Grid(ctx, columnCount, rowCount);
 
                     const referenceCell: Cell = grid.getCellAt(position);
                     const expectedNeighboursCoordinates: IGridCoordinates[] = neighbours.sort(sortCoordinates);
@@ -89,7 +89,9 @@ describe('Grid', () => {
     );
 
     it('Follows the \'Any live cell with less than 2 neighbours dies\' rule', () => {
-        const grid: Grid = new Grid(ctx);
+        columnCount = 3;
+        rowCount = 3;
+        const grid: Grid = new Grid(ctx, columnCount, rowCount);
         const referenceCell: Cell = grid.getCellAt({row: 1, column: 1});
         referenceCell.currentState = State.Alive;
 
@@ -108,7 +110,9 @@ describe('Grid', () => {
     });
 
     it('Follows the \'Any live cell with 2 or 3 neighbours lives to the next generation\' rule', () => {
-        const grid: Grid = new Grid(ctx);
+        columnCount = 3;
+        rowCount = 3;
+        const grid: Grid = new Grid(ctx, columnCount, rowCount);
         const referenceCell: Cell = grid.getCellAt({row: 1, column: 1});
         referenceCell.currentState = State.Alive;
 
@@ -127,7 +131,7 @@ describe('Grid', () => {
     });
 
     it('Follows the \'Any live cell with more than 3 neighbours dies\' rule', () => {
-        const grid: Grid = new Grid(ctx);
+        const grid: Grid = new Grid(ctx, columnCount, rowCount);
         const referenceCell: Cell = grid.getCellAt({row: 1, column: 1});
         referenceCell.currentState = State.Alive;
 
@@ -146,7 +150,7 @@ describe('Grid', () => {
     });
 
     it('Follows the \'Any dead cell with exactly 3 neighbours becomes living in the next generation\' rule', () => {
-        const grid: Grid = new Grid(ctx);
+        const grid: Grid = new Grid(ctx, columnCount, rowCount);
         const referenceCell: Cell = grid.getCellAt({row: 1, column: 1});
         referenceCell.currentState = State.Dead;
 

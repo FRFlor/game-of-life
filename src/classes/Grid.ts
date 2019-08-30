@@ -1,17 +1,26 @@
 import Cell from '@/classes/Cell';
-import Configurations from '@/classes/Configurations';
 import {IGridCoordinates} from '@/types';
 
 export default class Grid {
+    public readonly columnCount: number = 3;
+    public readonly rowCount: number = 3;
     private ctx: CanvasRenderingContext2D;
     private cells: Cell[][] = [];
 
-    constructor(ctx: CanvasRenderingContext2D) {
+
+    constructor(ctx: CanvasRenderingContext2D, columnCount: number, rowCount: number) {
         this.ctx = ctx;
+        this.columnCount = columnCount;
+        this.rowCount = rowCount;
+
         Cell.setRenderer(ctx);
-        for (let row = 0; row < Configurations.rowCount; row++) {
+        const cellWidth: number = Math.ceil(ctx.canvas.width / this.columnCount);
+        const cellHeight: number = Math.ceil(ctx.canvas.height / this.rowCount);
+        Cell.setDimensions(cellWidth, cellHeight);
+
+        for (let row = 0; row < this.rowCount; row++) {
             this.cells.push([]);
-            for (let column = 0; column < Configurations.columnCount; column++) {
+            for (let column = 0; column < this.columnCount; column++) {
                 this.cells[row].push(new Cell({row, column}, Math.random() < 0.25));
             }
         }
@@ -28,8 +37,8 @@ export default class Grid {
     }
 
     public getCellAt({row, column}: IGridCoordinates): Cell {
-        const rowWithWrapping: number = (row + Configurations.rowCount) % Configurations.rowCount;
-        const columnWithWrapping: number = (column + Configurations.columnCount) % Configurations.columnCount;
+        const rowWithWrapping: number = (row + this.rowCount) % this.rowCount;
+        const columnWithWrapping: number = (column + this.columnCount) % this.columnCount;
 
         return this.cells[rowWithWrapping][columnWithWrapping];
     }
@@ -57,8 +66,8 @@ export default class Grid {
     }
 
     private forEachCell(callback: (cell: Cell, row: number, column: number) => void): void {
-        for (let row = 0; row < Configurations.rowCount; row++) {
-            for (let column = 0; column < Configurations.columnCount; column++) {
+        for (let row = 0; row < this.rowCount; row++) {
+            for (let column = 0; column < this.columnCount; column++) {
                 callback(this.cells[row][column], row, column);
             }
         }

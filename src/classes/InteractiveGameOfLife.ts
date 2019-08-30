@@ -1,16 +1,17 @@
 import Grid from '@/classes/Grid';
-import Configurations from '@/classes/Configurations';
 import Glider, {GliderDirection} from '@/classes/patterns/Glider';
 import {IGridCoordinates} from '@/types';
 
 export default class InteractiveGameOfLife {
     private grid: Grid;
     private ctx: CanvasRenderingContext2D;
+    private canvas: HTMLCanvasElement;
     private cursorPosition?: IGridCoordinates;
 
-    constructor(ctx: CanvasRenderingContext2D) {
-        this.grid = new Grid(ctx);
+    constructor(ctx: CanvasRenderingContext2D, columnCount: number, rowCount: number) {
+        this.grid = new Grid(ctx, columnCount, rowCount);
         this.ctx = ctx;
+        this.canvas = ctx.canvas;
 
         this.ctx.canvas.addEventListener('click', this.addGlider.bind(this), false);
         this.ctx.canvas.addEventListener('mousemove', this.updateCursorPosition.bind(this), false);
@@ -46,14 +47,13 @@ export default class InteractiveGameOfLife {
         this.cursorPosition = this.getGridCoordinatesFromMouseEvent(event);
     }
 
-    private getGridCoordinatesFromMouseEvent(event: any): IGridCoordinates {
+    private getGridCoordinatesFromMouseEvent(event: MouseEvent): IGridCoordinates {
         const baseX: number = this.ctx.canvas.offsetLeft;
         const baseY: number = this.ctx.canvas.offsetTop;
-
         const x: number = event.pageX - baseX;
         const y: number = event.pageY - baseY;
-        const column: number = Math.floor(Configurations.columnCount * x / this.ctx.canvas.width);
-        const row: number = Math.floor(Configurations.rowCount * y / this.ctx.canvas.height);
+        const column: number = Math.floor(this.grid.columnCount * x / this.ctx.canvas.width);
+        const row: number = Math.floor(this.grid.rowCount * y / this.ctx.canvas.height);
 
         return {row, column};
     }

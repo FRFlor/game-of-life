@@ -1,5 +1,4 @@
 import Cell from '@/classes/Cell';
-import Configurations from '@/classes/Configurations';
 
 describe('Cell', () => {
     let canvas: HTMLCanvasElement;
@@ -10,10 +9,9 @@ describe('Cell', () => {
         canvas = document.createElement('canvas');
         canvas.width = canvasSize;
         canvas.height = canvasSize;
-        Configurations.rowCount = 3;
-        Configurations.columnCount = 3;
         ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         Cell.setRenderer(ctx);
+        Cell.setDimensions(10, 10);
     });
 
     describe('Renders to the correct canvas coordinates', () => {
